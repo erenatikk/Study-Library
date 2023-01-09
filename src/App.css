@@ -1,0 +1,47 @@
+.logo{
+  height: 100px;
+  
+}
+.lib-photo{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  
+}
+/* @media (max-width: 800px) {
+  .duyuru-listesi-title {
+      text-align: center;
+      color: #ffffff;
+      font-size: 3em;
+      line-height: 1.5em !important;
+  }
+
+  .duyuru-listesi {
+      width: 100% !important;
+      height: 80% !important;
+      position: absolute !important;
+      bottom: 0 !important;
+      background-color: rgba(0, 109, 115, .8) !important;
+      padding: 1rem 0 0 0 !important;
+      left: 0 !important;
+      top: 6% !important;
+  }
+} */
+.duyuru-listesi {
+  text-align: center;
+  width: 25%;
+  height: 40%;
+  position: absolute;
+  left: 5%;
+  top: 30%;
+  background-color: rgba(1, 100, 11, .6 );
+  padding: 0;
+  color: white;
+}
+.duyuru-header {
+  top: 0;
+  height: 10%;
+  width: 100%;
+  text-align: center;
+  border-bottom: 1px solid white;
+}
