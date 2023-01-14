@@ -11,7 +11,6 @@ import Randevu from './components/Randevu';
 import Giris from './components/Giris';
 import Kayit from './components/Kayıt';
 
-
 function App() {
   return (
     <div className="App">
@@ -42,7 +41,7 @@ function App() {
             </li>
           </ul>
           <form className="d-flex mb-3" role="search">
-           <Link to="/kayit"><button className="btn btn-outline-success"  type="submit">Kayıt Ol</button></Link> 
+           <Link to="/register"><button className="btn btn-outline-success"  type="submit">Kayıt Ol</button></Link> 
            <Link to="/giris"><button className="btn btn-outline-success" type="submit">Giriş Yap</button></Link>
           </form>
          </div>
@@ -57,7 +56,7 @@ function App() {
               <Route path='/hakkimizda' element={<Hakkimizda/>}/>
               <Route path='/randevu' element={<Randevu/>}/>
               <Route path='/giris' element={<Giris/>}/>
-              <Route path='/kayit' element={<Kayit/>}/>
+              <Route path='/register' element={<Kayit/>}/>
             </Routes>
         </div>  
       </div>
