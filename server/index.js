@@ -85,16 +85,54 @@ db.getConnection(async (err,connection)=>{
     
             if(await bcrypt.compare(password , hashedPassword)){
                 console.log("----> Login Successful")
-                res.send('${username} is logged in')
+                res.json({usr: true})
+
             }
-            else{
+              else{
                 console.log("----> Password Inccorect");
-                res.send("Password incorrect!")
+                res.json({usr : false})
             }
         }
     })
     })
 })
+
+app.get("/db-book", (req,res)=>{
+    db.getConnection(async(err,connection)=>{
+        if(err) throw (err)
+        const sqlBook = "SELECT book_id , title  FROM book ";
+        await connection.query(sqlBook, async(err,result)=>{
+            if(result.length==0){
+                console.log("---> Book does not exist");
+                res.sendStatus(404);
+                res.json({tmpdata : false})
+            }
+            else{
+                console.log(result);
+                console.log("query başarılı")
+                // res.json({tmpdata : true})
+                console.log(JSON.stringify(result));
+                res.json({result})
+                
+            }
+        })
+    })
+})
+
+var data = {
+    portal : "GeeksforGeeks",
+    knowledge : "unlimited",
+    location : "Noida"  
+}
+  
+app.get('/temp' , (req,res)=>{
+   // This will send the JSON data to the client.
+    res.json(data); 
+})
+  
+
+
+
 
 app.listen(3001,()=>{
     console.log("running server");

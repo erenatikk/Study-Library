@@ -1,74 +1,136 @@
-import React, { useEffect, useRef } from 'react'
-import "datatables.net"
-import "datatables.net-dt"
-import "datatables.net-dt/js/dataTables.dataTables"
-import "datatables.net-dt/css/jquery.dataTables.min.css"
-import $ from 'jquery'
+import React, { useEffect, useRef, useState } from 'react'
 
- function Kitaplar(props) {
- 
-    $.DataTable = require('datatables.net')
-    const tableRef = useRef()
-    // console.log(tableRef)
-    const tableName = "table1"
-     
+import DataTable from 'react-data-table-component';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Axios from 'axios'
+
+
+
+
+const selectProps = { indeterminate: isIndeterminate => isIndeterminate };
+
+function Kitaplar(props) {
+    const [columns, setColumns] = useState([]);
+    const [pending, setPending] = React.useState(true);
+    const [result, setResult] = useState();
+
+    const [resp, setResp] = useState();
+    const [dbdata, setDbData] = useState([]);
+    const data = [
+        {
+            id: 1,
+            title: dbdata.map((dbdata)=>title),
+            year: '1988',
+
+
+        },
+        {
+            id: 2,
+            title: 'Ghostbusters',
+            year: '1984',
+        },
+    ]
+
     useEffect(() => {
-        console.log(tableRef.current)
-        const table = $(`#${tableName}`).DataTable(
-            {
-                data: props.data,
-                    columns: [
-                        { title: "Book ID"},
-                        { title: "Book Name"},
-                        { title: "Author"},
-                        { title: "Language"},
-                        { title: "Start data"},
-                        { title: "Salary"}
-                    ],
-                    destroy: true,  // I think some clean up is happening here
-                    searching: false
-            }
-        )
-        // Extra step to do extra clean-up.
-        return function() {
-            console.log("Table destroyed")
-            table.destroy()
-        }
-    },[])
-        return (
-            <div>
-                <table className="display" width="100%" id={tableName} ref={ tableRef }></table>
-            </div>
-             
-        )
+        const timeout = setTimeout(() => {
+            setColumns([
+                {
+                    name: 'Title',
+                    selector: row => row.title,
+                    sortable: true,
+
+                },
+                {
+                    name: 'isbn',
+                    selector: row => row.year,
+                    sortable: true,
+                },
+                {
+                    name: 'language id',
+                    selector: row => row.email,
+                    sortable: true,
+                },
+                {
+                    name: 'numpages',
+                    selector: row => row.email,
+                    sortable: true,
+                },
+                {
+                    name: 'publication date',
+                    selector: row => row.email,
+                    sortable: true,
+                },
+                {
+                    name: 'publisher id',
+                    selector: row => row.email,
+                    sortable: true,
+                },
+
+            ]);
+            setPending(false);
+        }, 2000);
+        return () => clearTimeout(timeout);
+    }, []);
+
+    const getAllBooks = (event) => {
+        event.preventDefault();
+        Axios.get("http://localhost:3001/db-book").
+            then((response) => {
+                // setResp(response['data']['tmpdata'])
+                // console.log(response)
+                setDbData(response['data']['result'])
+                console.log(response)
+            },
+                (error) => {
+                    console.log(error)
+                })
     }
 
 
-// function Kitaplar() {
-   
-//   return (   
-    
-//     //   <div>
-//     //     <table id="#table_id" className='MainDiv'>
-//     //         <thead>
-//     //             <tr>
-//     //                 <th>Column 1</th>
-//     //                 <th>Column 2</th>
-//     //             </tr>
-//     //         </thead>
-//     //         <tbody>
-//     //             <tr>
-//     //                 <td>Row 1 Data 1</td>
-//     //                 <td>Row 1 Data 2</td>
-//     //             </tr>
-//     //             <tr>
-//     //                 <td>Row 2 Data 1</td>
-//     //                 <td>Row 2 Data 2</td>
-//     //             </tr>
-//     //         </tbody>
-//     //     </table>
-//     //   </div>   
-//   )
-// }
+    //  useEffect(()=>{
+    //     getAllBooks(); 
+    //  },[])
+    const [filterText, setFilterText] = React.useState('');
+    const [resetPaginationToggle, setResetPaginationToggle] = React.useState(false);
+    const filteredItems = columns.filter(
+        item => item.name && item.name.toLowerCase().includes(filterText.toLowerCase()),
+    );
 
- export default Kitaplar
+    const subHeaderComponentMemo = React.useMemo(() => {
+        const handleClear = () => {
+            if (filterText) {
+                setResetPaginationToggle(!resetPaginationToggle);
+                setFilterText('');
+            }
+        };
+
+        // return (
+        // 	<FilterComponent onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />
+        // );
+    }, [filterText, resetPaginationToggle]);
+    return (
+        <>
+            <button onClick={getAllBooks}>GET DATA</button>
+            <DataTable
+                columns={columns}
+                data={data}
+                selectableRows
+                selectableRowsComponent={Checkbox}
+                selectableRowsComponentProps={selectProps}
+                dense
+                pagination
+                highlightOnHover
+                {...props}
+                button
+                progressPending={pending}
+            />
+        </>
+    );
+}
+
+
+
+
+export default Kitaplar
