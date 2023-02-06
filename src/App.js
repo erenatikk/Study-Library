@@ -44,6 +44,7 @@ function App() {
           <form className="d-flex mb-3" role="search">
            <Link to="/register"><button className="btn btn-outline-success"  type="submit">Kayıt Ol</button></Link> 
            <Link to="/giris"><button className="btn btn-outline-success" type="submit">Giriş Yap</button></Link>
+           <h3>{}</h3>
           </form>
          </div>
         </div>

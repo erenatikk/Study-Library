@@ -18,20 +18,18 @@ function Kitaplar(props) {
 
     const [resp, setResp] = useState();
     const [dbdata, setDbData] = useState([]);
-    const data = [
-        {
-            id: 1,
-            title: dbdata.map((dbdata)=>title),
-            year: '1988',
-
-
-        },
-        {
-            id: 2,
-            title: 'Ghostbusters',
-            year: '1984',
-        },
-    ]
+    const data = dbdata.map((element, index) => {
+        return {
+            id: index + 1,
+            title: element.title,
+            isbn:element.isbn13,
+            language_id:element.language_id,
+            num_pages:element.num_pages,
+            publication_date:element.publication_date,
+            publisher_id:element.publisher_id
+            
+        }
+    })
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -44,27 +42,27 @@ function Kitaplar(props) {
                 },
                 {
                     name: 'isbn',
-                    selector: row => row.year,
+                    selector: row => row.isbn,
                     sortable: true,
                 },
                 {
                     name: 'language id',
-                    selector: row => row.email,
+                    selector: row => row.language_id,
                     sortable: true,
                 },
                 {
                     name: 'numpages',
-                    selector: row => row.email,
+                    selector: row => row.num_pages,
                     sortable: true,
                 },
                 {
                     name: 'publication date',
-                    selector: row => row.email,
+                    selector: row => row.publication_date,
                     sortable: true,
                 },
                 {
                     name: 'publisher id',
-                    selector: row => row.email,
+                    selector: row => row.publisher_id,
                     sortable: true,
                 },
 
@@ -89,9 +87,7 @@ function Kitaplar(props) {
     }
 
 
-    //  useEffect(()=>{
-    //     getAllBooks(); 
-    //  },[])
+    
     const [filterText, setFilterText] = React.useState('');
     const [resetPaginationToggle, setResetPaginationToggle] = React.useState(false);
     const filteredItems = columns.filter(

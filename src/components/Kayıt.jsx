@@ -11,7 +11,8 @@ function Kayıt() {
   const navigate = useNavigate();
 
 
-  const register = () =>{
+  const register = (event) =>{
+    event.preventDefault();
     Axios.post("http://localhost:3001/register",{
       username: userNameReg,
       password:passwordReg,
