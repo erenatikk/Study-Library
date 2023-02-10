@@ -100,7 +100,7 @@ app.post("/login", (req, res) => {
 app.get("/db-book", (req, res) => {
     db.getConnection(async (err, connection) => {
         if (err) throw (err)
-        const sqlBook = "SELECT  title, isbn13,language_id,num_pages,publication_date,publisher_id  FROM book ";
+        const sqlBook = "SELECT  book_name,author,publication_date,language_code,count  FROM booktbl ";
         await connection.query(sqlBook, async (err, result) => {
             if (result.length == 0) {
                 console.log("---> Book does not exist");
@@ -132,7 +132,7 @@ app.post("/dbdate", (req, res) => {
 
             const sqlInsert = "INSERT INTO dates (email, seat_date ) VALUES (?,?)"
             const insert_query = mysql.format(sqlInsert, [emailDate, seat_date])
-            const dateCheck ="Select * From dates Where seat_date>=NOW();"
+            
 
 
             await connection.query(search_query, async (err, result) => {

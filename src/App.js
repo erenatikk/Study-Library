@@ -11,6 +11,8 @@ import Randevu from './components/Randevu';
 import Giris from './components/Giris';
 import Kayit from './components/Kayıt';
 
+const [emailApp , setEmailApp] = useState("");
+
 function App() {
 
   return (

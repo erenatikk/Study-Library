@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react'
-
 import DataTable from 'react-data-table-component';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -15,57 +14,54 @@ function Kitaplar(props) {
     const [columns, setColumns] = useState([]);
     const [pending, setPending] = React.useState(true);
     const [result, setResult] = useState();
-
+    const [selectedRows, setSelectedRows] = React.useState([]);
     const [resp, setResp] = useState();
     const [dbdata, setDbData] = useState([]);
     const data = dbdata.map((element, index) => {
         return {
             id: index + 1,
-            title: element.title,
-            isbn:element.isbn13,
-            language_id:element.language_id,
-            num_pages:element.num_pages,
-            publication_date:element.publication_date,
-            publisher_id:element.publisher_id
-            
-        }
+            book_name: element.book_name,
+            author: element.author,
+            publication_date: element.publication_date,
+            language_code: element.language_code,
+            count: element.count
+        }
     })
+
+    const handleRowSelected = React.useCallback(state => {
+		setSelectedRows(state.selectedRows);
+	}, []);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
             setColumns([
                 {
-                    name: 'Title',
-                    selector: row => row.title,
+                    name: 'Book Name',
+                    selector: row => row.book_name,
                     sortable: true,
 
                 },
                 {
-                    name: 'isbn',
-                    selector: row => row.isbn,
+                    name: 'Author',
+                    selector: row => row.author,
                     sortable: true,
                 },
                 {
-                    name: 'language id',
-                    selector: row => row.language_id,
-                    sortable: true,
-                },
-                {
-                    name: 'numpages',
-                    selector: row => row.num_pages,
-                    sortable: true,
-                },
-                {
-                    name: 'publication date',
+                    name: 'Publication Date',
                     selector: row => row.publication_date,
                     sortable: true,
                 },
                 {
-                    name: 'publisher id',
-                    selector: row => row.publisher_id,
+                    name: 'Language',
+                    selector: row => row.language_code,
                     sortable: true,
                 },
-
+                {
+                    name: 'Count',
+                    selector: row => row.count,
+                    sortable: true,
+                },
+                
             ]);
             setPending(false);
         }, 2000);
@@ -86,8 +82,17 @@ function Kitaplar(props) {
                 })
     }
 
+     const claimOne = () => {
+         handleClaim = ()=>{
+            if(window.confirm("Ayırtmak istediğinize emin misiniz?\r ${selectedRows.map(r => r.title)}?"))
+            {
+                
+            }
+         }
+     }
 
-    
+
+
     const [filterText, setFilterText] = React.useState('');
     const [resetPaginationToggle, setResetPaginationToggle] = React.useState(false);
     const filteredItems = columns.filter(
@@ -108,7 +113,7 @@ function Kitaplar(props) {
     }, [filterText, resetPaginationToggle]);
     return (
         <>
-            <button onClick={getAllBooks}>GET DATA</button>
+            <button className="btn btn-outline-warning" onClick={getAllBooks}>LİSTELE</button>
             <DataTable
                 columns={columns}
                 data={data}
@@ -122,6 +127,7 @@ function Kitaplar(props) {
                 button
                 progressPending={pending}
             />
+            <button className="btn btn-outline-warning" >AYIRT</button>
         </>
     );
 }

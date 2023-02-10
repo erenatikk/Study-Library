@@ -6,7 +6,7 @@ function Anasayfa() {
     <div className='container'>
       <div className="row">
         <div className="col-mt-12">
-          <div className="">
+          <div className="mx-auto">
             <img className='lib-photo' src={libPhoto}/>
           </div>
           <div className="duyuru-listesi">
