@@ -12,12 +12,13 @@ const selectProps = { indeterminate: isIndeterminate => isIndeterminate };
 
 function Kitaplar(props) {
     const [columns, setColumns] = useState([]);
-    const [pending, setPending] = React.useState(true);
-    const [result, setResult] = useState();
+    // const [pending, setPending] = React.useState(true);
+    const [selectedData, setSelectedData] = React.useState();
     const [selectedRows, setSelectedRows] = React.useState([]);
     const [resp, setResp] = useState();
     const [dbdata, setDbData] = useState([]);
-    const data = dbdata.map((element, index) => {
+
+    const data = dbdata?dbdata.map((element, index) => {
         return {
             id: index + 1,
             book_name: element.book_name,
@@ -26,52 +27,92 @@ function Kitaplar(props) {
             language_code: element.language_code,
             count: element.count
         }
-    })
+    }):window.alert("BOŞ")
 
-    const handleRowSelected = React.useCallback(state => {
-		setSelectedRows(state.selectedRows);
-	}, []);
+    // const handleRowSelected = React.useCallback(state => {
+	// 	setSelectedRows(state.selectedRows);
+    //     console.log(selectedRows)
+	// }, []);
+     const handleRowSelected = ({ selectedRows })=>{
+        setSelectedRows(selectedRows)
+        console.log(selectedRows)
+     }
+console.log(data)
+useEffect(()=>{
+    getAllBooks();
+    setColumns([
+                     {
+                         name: 'Book Name',
+                         selector: row => row.book_name,
+                         sortable: true,
+    
+                     },
+                     {
+                         name: 'Author',
+                         selector: row => row.author,
+                         sortable: true,
+                     },
+                     {
+                         name: 'Publication Date',
+                         selector: row => row.publication_date,
+                         sortable: true,
+                     },
+                     {
+                         name: 'Language',
+                         selector: row => row.language_code,
+                         sortable: true,
+                     },
+                     {
+                         name: 'Count',
+                         selector: row => row.count,
+                         sortable: true,
+                     },
+                    
+                 ]);
 
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            setColumns([
-                {
-                    name: 'Book Name',
-                    selector: row => row.book_name,
-                    sortable: true,
+},[])
 
-                },
-                {
-                    name: 'Author',
-                    selector: row => row.author,
-                    sortable: true,
-                },
-                {
-                    name: 'Publication Date',
-                    selector: row => row.publication_date,
-                    sortable: true,
-                },
-                {
-                    name: 'Language',
-                    selector: row => row.language_code,
-                    sortable: true,
-                },
-                {
-                    name: 'Count',
-                    selector: row => row.count,
-                    sortable: true,
-                },
+    // useEffect(() => {
+    //     const timeout = setTimeout(() => {
+    //         setColumns([
+    //             {
+    //                 name: 'Book Name',
+    //                 selector: row => row.book_name,
+    //                 sortable: true,
+
+    //             },
+    //             {
+    //                 name: 'Author',
+    //                 selector: row => row.author,
+    //                 sortable: true,
+    //             },
+    //             {
+    //                 name: 'Publication Date',
+    //                 selector: row => row.publication_date,
+    //                 sortable: true,
+    //             },
+    //             {
+    //                 name: 'Language',
+    //                 selector: row => row.language_code,
+    //                 sortable: true,
+    //             },
+    //             {
+    //                 name: 'Count',
+    //                 selector: row => row.count,
+    //                 sortable: true,
+    //             },
                 
-            ]);
-            setPending(false);
-        }, 2000);
-        return () => clearTimeout(timeout);
-    }, []);
+    //         ]);
+    //         setPending(false);
+    //     }, 2000);
+    //     return () => clearTimeout(timeout);
+    // }, [dbdata]);
 
-    const getAllBooks = (event) => {
-        event.preventDefault();
-        Axios.get("http://localhost:3001/db-book").
-            then((response) => {
+    const getAllBooks = () => {
+        // event.preventDefault();
+        console.log("a")
+        Axios.get("http://localhost:3001/db-book",{
+        }).then((response) => {
                 // setResp(response['data']['tmpdata'])
                 // console.log(response)
                 setDbData(response['data']['result'])
@@ -81,16 +122,25 @@ function Kitaplar(props) {
                     console.log(error)
                 })
     }
+    
+     const updateCount = (event) => {
+        event.preventDefault();
+        console.log(selectedRows[0].book_name)
+         Axios.post("http://localhost:3001/update-db-book",{
+             selectedRows:selectedRows[0].book_name
 
-     const claimOne = () => {
-         handleClaim = ()=>{
-            if(window.confirm("Ayırtmak istediğinize emin misiniz?\r ${selectedRows.map(r => r.title)}?"))
-            {
+         }).then((response) => {
                 
-            }
-         }
+                 setDbData(response['data']['result'])
+                 console.log(response)
+             },
+                (error) => {
+                    console.log(error)
+                })
+                getAllBooks(event);
      }
 
+    
 
 
     const [filterText, setFilterText] = React.useState('');
@@ -114,10 +164,12 @@ function Kitaplar(props) {
     return (
         <>
             <button className="btn btn-outline-warning" onClick={getAllBooks}>LİSTELE</button>
-            <DataTable
+            {dbdata?<DataTable
                 columns={columns}
                 data={data}
-                selectableRows
+                selectableRows 
+                onSelectedRowsChange={handleRowSelected}
+//selectedRows={handleRowSelected}
                 selectableRowsComponent={Checkbox}
                 selectableRowsComponentProps={selectProps}
                 dense
@@ -125,9 +177,9 @@ function Kitaplar(props) {
                 highlightOnHover
                 {...props}
                 button
-                progressPending={pending}
-            />
-            <button className="btn btn-outline-warning" >AYIRT</button>
+                // progressPending={pending}
+            />:<p>Loading</p>}
+            <button className="btn btn-outline-warning" onClick={updateCount}>AYIRT</button>
         </>
     );
 }

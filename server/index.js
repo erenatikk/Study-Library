@@ -30,7 +30,7 @@ app.post("/register", async (req, res) => {
 
 
     db.getConnection(async (err, connection) => {
-        const sqlSearch = "SELECT * FROM usertb WHERE email = ?"
+        const sqlSearch = "SELECT * FROM usertb WHERE email = ?"    
         const search_query = mysql.format(sqlSearch, [email])
 
         const sqlInsert = "INSERT INTO usertb (name, password , email) VALUES (?,?,?)"
@@ -45,6 +45,8 @@ app.post("/register", async (req, res) => {
                 connection.release()
                 console.log("----> User already exists")
                 res.sendStatus(404)
+                res.send({check:false})
+
             }
             else {
                 await connection.query(insert_query, (err, result) => {
@@ -52,6 +54,9 @@ app.post("/register", async (req, res) => {
                     if (err) throw (err)
                     console.log("---->Created new User")
                     res.sendStatus(201)
+                    res.send({check:true})
+                    
+
                 })
             }
         })
@@ -101,6 +106,7 @@ app.get("/db-book", (req, res) => {
     db.getConnection(async (err, connection) => {
         if (err) throw (err)
         const sqlBook = "SELECT  book_name,author,publication_date,language_code,count  FROM booktbl ";
+        
         await connection.query(sqlBook, async (err, result) => {
             if (result.length == 0) {
                 console.log("---> Book does not exist");
@@ -108,13 +114,53 @@ app.get("/db-book", (req, res) => {
                 res.json({ tmpdata: false })
             }
             else {
-                console.log(result);
                 console.log("query başarılı")
                 // res.json({tmpdata : true})
-                console.log(JSON.stringify(result));
-                res.json({ result })
+                    res.json({ result })
 
             }
+        })
+    })
+})
+// app.post("/update-db-book", (req, res) => {
+//     const selectedData = req.body.selectedData
+//     console.log(selectedData)
+
+//     db.getConnection(async (err, connection) => {
+//         if (err) throw (err)
+//         const sqlBook = "SELECT  book_name,author,publication_date,language_code,count  FROM booktbl ";
+//         const sqlCount = "UPDATE booktbl SET count = count - 1 WHERE book_name =?";
+//         const sqlPC = mysql.format(sqlCount,[selectedData])
+        
+//         connection.query(sqlPC,(err,result)=>{
+//             console.log(result)
+//              connection.query(sqlBook, async (err, result) => {
+//                 if (result.length == 0) {
+//                     console.log("---> Book does not exist");
+//                     res.sendStatus(404);
+//                     res.json({ tmpdata: false })
+//                 }
+//                 else {
+                    
+//                     console.log("query başarılı 2")
+//                     // res.json({tmpdata : true})
+//                     res.json({ result })
+    
+//                 }
+//             })
+//         })
+       
+//     })
+// })
+app.post("/update-db-book", (req, res)=>{
+    const selectedRows = req.body.selectedRows
+    console.log(selectedRows)
+    db.getConnection(async(err,connection)=>{
+        if(err) throw (err)
+        const sqlCount = "UPDATE booktbl SET count = count - 1 WHERE book_name =?";
+        const sqlPC = mysql.format(sqlCount,[selectedRows])
+        connection.query(sqlPC,(err,result)=>{
+            console.log(result)
         })
     })
 })

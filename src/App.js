@@ -1,8 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import './App.css';
 import logo from './images/library-logo.png';
-import libPhoto from './images/library-photo.png';
-import {Link , Route, Routes , useParams} from 'react-router-dom';
+import {Link , Route, Routes , useParams,useLocation} from 'react-router-dom';
 import Anasayfa from './components/Anasayfa';
 import Kitaplar from './components/Kitaplar';
 import Kurallar from './components/Kurallar';
@@ -10,10 +9,17 @@ import Hakkimizda from './components/Hakkimizda';
 import Randevu from './components/Randevu';
 import Giris from './components/Giris';
 import Kayit from './components/Kayıt';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { authActions } from './store/auth';
 
-const [emailApp , setEmailApp] = useState("");
+
 
 function App() {
+
+  const email = useSelector(state => state.auth.email);
+
+  const dispatch = useDispatch();
 
   return (
     <div className="App">
@@ -44,9 +50,10 @@ function App() {
             </li>
           </ul>
           <form className="d-flex mb-3" role="search">
-           <Link to="/register"><button className="btn btn-outline-success"  type="submit">Kayıt Ol</button></Link> 
-           <Link to="/giris"><button className="btn btn-outline-success" type="submit">Giriş Yap</button></Link>
-           <h3>{}</h3>
+           {email?<Link to="/giris"><button className="btn btn-outline-success" type="submit" onClick={()=>{dispatch(authActions.setEmail(""))}}>Çıkış</button></Link>:
+           <div><Link to="/register"><button className="btn btn-outline-success"  type="submit">Kayıt Ol</button></Link> 
+           <Link to="/giris"><button className="btn btn-outline-success" type="submit">Giriş Yap</button></Link></div>}
+           <h3 className='bg-info'>{email}</h3>
           </form>
          </div>
         </div>

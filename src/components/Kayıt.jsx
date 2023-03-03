@@ -1,4 +1,4 @@
-import React , { useState } from 'react'
+import React , { useState,useEffect } from 'react'
 import Axios from 'axios';
 import { useNavigate, Route ,Navigate} from 'react-router-dom';
 
@@ -8,22 +8,41 @@ function Kayıt() {
   const [userNameReg,setUserName] = useState("");
   const [passwordReg,setPassword] = useState("");
   const [emailReg,setEmail] = useState("");
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const[resp,setResp] = useState(false);
+  // console.log(resp)
+
+  useEffect(() => {
+    if (resp==true) {
+      navigate("/giris")
+      window.alert("Giriş Başarılı")
+    }
+    else {
+      navigate("/register")
+      // window.alert("Eposta daha önceden kayıtlı")
+     
+    }
+  }, [resp])
 
 
-  const register = (event) =>{
+
+  const register = (event) => {
     event.preventDefault();
-    Axios.post("http://localhost:3001/register",{
+    Axios.post("http://localhost:3001/register", {
       username: userNameReg,
-      password:passwordReg,
-      email:emailReg,
-      
-    }).then((response)=>{
+      password: passwordReg,
+      email: emailReg,
+
+    }).then((response) => {
+      setResp(response)
       console.log(response);
-
-
+      if (error) {
+        window.alert(error)
+      }
     }, (error) => {
-      console.log(error);});
+      console.log(error);
+    });
   };
 
 

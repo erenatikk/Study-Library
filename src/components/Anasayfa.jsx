@@ -14,6 +14,10 @@ function Anasayfa() {
               Duyurular
             </div>
             <div className='duyuru-icerik'> 
+              -Oturma planları güncellendi.<br/><br/>
+              -Yeni kitaplar sisteme eklendi.<br/><br/>
+              -Kurallar güncellendi.<br/><br/>
+              -Kütüphane kayıt şartlarını okuyunuz.
               
             </div>
           </div>

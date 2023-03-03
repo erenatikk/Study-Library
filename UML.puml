@@ -1,0 +1,67 @@
+@startuml
+class Login{
+   emaillog: string
+   password: string
+   error: bool
+   resp: bool
+   -----
+   Methods:
+   callMail()
+   login()
+   setPassword()
+   setEmail()
+   setResp()
+   setErrror()
+
+}
+
+class Register{
+    username:string
+    emailReg:string
+    password:string
+    error: bool
+    resp: bool
+    -----
+    Methods:
+    register()
+    setEmail()
+    setPassword()
+    setUsername()
+    setErrror()
+    setResp()
+
+}
+
+class Books{
+selectedRows:string
+dbData:string
+selectedData:string
+resp:string
+-----
+Methods:
+setSelectedRows()
+setSelecetedData()
+setDbData()
+setResp()
+}
+
+class Reservation{
+date:datetime
+error:bool
+isLoggedIn:bool
+-----
+Methods:
+setDate()
+setErrror()
+isLoggedIn()
+}
+
+class App{
+email:string
+}
+App -> Login
+App -> Register
+App -> Books
+App -> Reservation
+
+@enduml
